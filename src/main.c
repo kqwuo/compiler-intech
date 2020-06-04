@@ -8,6 +8,7 @@
 #include "ast.h"
 #include "parser.h"
 #include "utils.h"
+#include "lexer.h"
 
 
 symbol_t *global_table = NULL;
