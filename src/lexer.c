@@ -132,6 +132,26 @@ char *lexer_getalphanum_rollback (buffer_t *buffer)
   return out;
 }
 
+bool isop (char chr)
+{
+  if (chr == '+' ||
+      chr == '-' ||
+      chr == '*' ||
+      chr == '/' ||
+      chr == 'E' ||
+      chr == 'T' ||
+      chr == 'O' ||
+      chr == 'U' ||
+      chr == '<' ||
+      chr == '>' ||
+      chr == '=' ||
+      chr == '!'
+    ) {
+     return true;
+  }
+  return false;
+}
+
 long lexer_getnumber (buffer_t *buffer)
 {
   char save[LEXEM_SIZE] = "";
@@ -153,5 +173,29 @@ long lexer_getnumber (buffer_t *buffer)
   save[count - 1] = '\0';
   long out = strtol(save, NULL, 10);
   
+  return out;
+}
+
+char *lexer_getop (buffer_t *buffer) {
+  char save[OP_SIZE] = "";
+  size_t count = 0;
+  buf_lock(buffer);
+  do {
+    save[count] = buf_getchar(buffer);
+    count++;
+  } while (count <= OP_SIZE && isop(save[count - 1]));
+
+  buf_rollback(buffer, 1);
+  buf_unlock(buffer);
+
+  if (count > OP_SIZE) {
+    printf("Error parsing identifier: identifier too long!. exiting\n");
+    exit(1); // arrêt brutal du programme
+  }
+
+  char *out = malloc(sizeof(char) * count);
+  save[count - 1] = '\0';
+  strncpy(out, save, count);
+
   return out;
 }

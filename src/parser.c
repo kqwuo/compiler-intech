@@ -95,6 +95,10 @@ ast_t *parse_expression_next_symbol(buffer_t *buffer, symbol_t **table) {
   // elle doit retourner l'ast_t correspondant à ce symbole
   // il n'est pas exclu de devoir rajouter des paramètres à cette fonction permettant par exemple de lui indiquer quels sont les types d'ast qui sont
   // autorisés à ce moment de la lecture (ex: une opérande après avoir lu un opérateur, ex pas de fin d'expression juste après un opérateur, etc.)
+  char *op = lexer_getop(buffer);
+
+  return ast_binary_to_string(op);
+
   return NULL; // TODO
 }
 
